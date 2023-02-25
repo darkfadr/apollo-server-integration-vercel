@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "outDir": "./dist",
+    "paths": {
+      "@apollo-server-integration-vercel/*": ["./src/*"]
+    },
+    "strict": true,
+    "target": "es5"
+  },
+  "include": ["src"]
+}

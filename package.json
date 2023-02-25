@@ -1,0 +1,110 @@
+{
+  "author": "Ashley Narcisse",
+  "description": "An Apollo Server integration for use with Vercel",
+  "devDependencies": {
+    "@apollo/server": "4.4.0",
+    "@apollo/server-integration-testsuite": "4.4.0",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/preset-typescript": "^7.21.0",
+    "@changesets/changelog-github": "0.4.8",
+    "@changesets/cli": "2.26.0",
+    "@types/jest": "29.4.0",
+    "@types/node": "14.18.36",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "@typescript-eslint/eslint-plugin": "5.52.0",
+    "@typescript-eslint/parser": "5.52.0",
+    "@vercel/node": "^2.9.8",
+    "babel-plugin-tsconfig-paths-module-resolver": "1.0.4",
+    "eslint": "8.34.0",
+    "eslint-config-airbnb": "19.0.4",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-import-resolver-typescript": "3.5.3",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-typescript-sort-keys": "2.1.0",
+    "graphql": "^16.6.0",
+    "jest": "29.4.3",
+    "next": "^13.2.1",
+    "prettier": "2.8.4",
+    "typescript": "4.9.5",
+    "wireit": "0.9.5"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "@as-integrations/vercel",
+  "peerDependencies": {
+    "@apollo/server": "^4.0.0"
+  },
+  "repository": "https://github.com/apollo-server-integrations/apollo-server-integration-vercel",
+  "scripts": {
+    "build": "wireit",
+    "check": "wireit",
+    "check:changeset": "bash -c 'BRANCH=$(git rev-parse --abbrev-ref HEAD); if [[ $BRANCH != changeset-release/* ]] && [[ $BRANCH != renovate/* ]]; then changeset status --since=origin/main; fi'",
+    "check:eslint": "wireit",
+    "check:prettier": "wireit",
+    "check:tsc": "wireit",
+    "fix": "wireit",
+    "fix:eslint": "wireit",
+    "fix:prettier": "wireit",
+    "prepack": "npm run build",
+    "publish:changeset": "changeset publish",
+    "test": "wireit",
+    "test:vercel": "jest",
+    "test:vercel:incremental": "INCREMENTAL_DELIVERY_TESTS_ENABLED=true jest"
+  },
+  "types": "dist/index.d.ts",
+  "version": "1.2.0",
+  "wireit": {
+    "build": {
+      "command": "tsc -p tsconfig.build.json",
+      "dependencies": [
+        "check:eslint",
+        "check:prettier"
+      ],
+      "output": [
+        "./dist/**/*"
+      ]
+    },
+    "check": {
+      "dependencies": [
+        "check:changeset",
+        "check:eslint",
+        "check:prettier",
+        "check:tsc"
+      ]
+    },
+    "check:eslint": {
+      "command": "eslint --ignore-path .prettierignore $(git diff --diff-filter d --name-only HEAD~1 | grep -E '\\.(js|ts)$' | xargs)"
+    },
+    "check:prettier": {
+      "command": "prettier --check $(git diff --diff-filter d --name-only HEAD~1 | xargs)"
+    },
+    "check:tsc": {
+      "command": "tsc --noEmit"
+    },
+    "fix": {
+      "dependencies": [
+        "fix:eslint",
+        "fix:prettier"
+      ]
+    },
+    "fix:eslint": {
+      "command": "eslint --fix --ignore-path .prettierignore $(git diff --diff-filter d --name-only HEAD~1 | grep -E '\\.(js|ts)$' | xargs)"
+    },
+    "fix:prettier": {
+      "command": "prettier --write $(git diff --diff-filter d --name-only HEAD~1 | xargs)"
+    },
+    "test": {
+      "dependencies": [
+        "test:vercel"
+      ]
+    }
+  }
+}
